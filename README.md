@@ -1,0 +1,1 @@
+Small C++ suite to test cmake building c++ tests linked to MATLAB
