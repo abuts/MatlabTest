@@ -39,7 +39,7 @@ ELSEIF (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 ELSE()
    message(FATAL_ERROR "OS name ${CMAKE_HOST_SYSTEM_NAME} have not been recognized. HORACE have never been build on such system" )
 ENDIF()
-set(Horace_DLL_DIRECTORY "${Horace_ROOT}/horace_core/DLL/${Matlab_ARCH}")
+#set(Horace_DLL_DIRECTORY "${Horace_ROOT}/horace_core/DLL/${Matlab_ARCH}")
 
 # Look for packages early so we can exit if they're not found
 find_package(OpenMP)
@@ -73,30 +73,6 @@ if(WIN32)
     # Don't package committed mex files
     set(EXTERNAL_IGNORE_PATTERN "*/external/glnxa64")
 endif()
-
-install(
-    DIRECTORY "herbert_core/"
-    DESTINATION "Horace/herbert_core/"
-    USE_SOURCE_PERMISSIONS
-    PATTERN "*.m~" EXCLUDE
-    PATTERN "*.asv" EXCLUDE
-    PATTERN "*.gitignore" EXCLUDE
-    PATTERN "${EXTERNAL_IGNORE_PATTERN}" EXCLUDE
-)
-
-install(
-    FILES "LICENSE" "README.md"
-    DESTINATION "Horace"
-)
-
-install(
-    DIRECTORY "horace_core/"
-    DESTINATION "Horace/horace_core/"
-    USE_SOURCE_PERMISSIONS
-    PATTERN "*.m~" EXCLUDE
-    PATTERN "*.asv" EXCLUDE
-    PATTERN "*.gitignore" EXCLUDE
-)
 
 
 set(CXX_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}")
