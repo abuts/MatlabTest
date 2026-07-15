@@ -58,61 +58,45 @@ function(pace_add_cpp_unit_test)
         'horace_add_unit_test'. Please specify at least one source file for \
         the test.")
     endif()
-    #target_include_directories("${TEST_NAME}" PRIVATE "${CXX_SOURCE_DIR}")
-    #target_link_libraries("${TEST_NAME}" gtest_main "${TEST_LIBRARIES}")
-    
-    
-    # If MEX_TEST flag was passed to function, link to Matlab libraries    
-    #if("${TEST_MEX_TEST}")
-    #    target_link_libraries("${TEST_NAME}" "${Matlab_LIBRARIES}")
-    #    target_include_directories(
-    #        "${TEST_NAME}" PRIVATE "${Matlab_INCLUDE_DIRS}")
-    #endif()
-
-    matlab_add_mex(
-        NAME "${TEST_NAME}"
-        EXECUTABLE
-        SRC "${${prefix}_SRC}"
-        OUTPUT_NAME "${${prefix}_OUTPUT_NAME}"
-        DOCUMENTATION "${${prefix}_DOCUMENTATION}"
-        LINK_TO gtest_main "${${prefix}_LINK_TO}"
-    )
-    
-    
 
     # Create the test executable
-    #add_executable("${TEST_NAME}" "${TEST_SOURCES}")
-    #target_include_directories("${TEST_NAME}" PRIVATE "${CXX_SOURCE_DIR}")
-    #target_link_libraries("${TEST_NAME}" gtest_main "${TEST_LIBRARIES}")
-    #set_target_properties("${TEST_NAME}" PROPERTIES
-    #    FOLDER "Tests"
-    #    RUNTIME_OUTPUT_DIRECTORY "${TESTS_BIN_DIR}"
-    #)
-
+    add_executable("${TEST_NAME}" "${TEST_SOURCES}")
+    target_include_directories("${TEST_NAME}" PRIVATE "${CXX_SOURCE_DIR}")
+    target_link_libraries("${TEST_NAME}" gtest_main "${TEST_LIBRARIES}")
+    set_target_properties("${TEST_NAME}" PROPERTIES
+        FOLDER "Tests"
+        RUNTIME_OUTPUT_DIRECTORY "${TESTS_BIN_DIR}"
+    )
+    # If MEX_TEST flag was passed to function, link to Matlab libraries
+    if("${TEST_MEX_TEST}")
+        target_link_libraries("${TEST_NAME}" "${Matlab_LIBRARIES}")
+        target_include_directories(
+            "${TEST_NAME}" PRIVATE "${Matlab_INCLUDE_DIRS}")
+    endif()
 
     # Prefix test name with cpp. to give easy regex for running only C++ tests
     set(_full_test_name "cpp.${TEST_NAME}")
 
     # Add the test to CTest
-    #add_test(
-    #    NAME "${_full_test_name}"
-    #    COMMAND "${TESTS_BIN_DIR}/${TEST_NAME}"
-    #    WORKING_DIRECTORY "${${PROJECT_NAME}_ROOT}"
-    #)
+    add_test(
+        NAME "${_full_test_name}"
+        COMMAND "${TESTS_BIN_DIR}/${TEST_NAME}"
+        WORKING_DIRECTORY "${${PROJECT_NAME}_ROOT}"
+    )
     # Add Matlab dll directory to the CTest path
-    #if(WIN32 AND "${TEST_MEX_TEST}")
-    #    set_tests_properties("${_full_test_name}" PROPERTIES
-    #        ENVIRONMENT "PATH=${Matlab_DLL_DIR}"
-    #    )
-    #    # Set Visual Studio debugger environment variables
-    #    # Adding the Matlab DLL directory stops errors because of missing DLLs
-    #    # and adding ${PROJECT_NAME}_ROOT variable helps tests find data files.
-    #    string(TOUPPER "${PROJECT_NAME}_ROOT" _proj_root_upper)
-    #    set_target_properties("${TEST_NAME}"
-    #        PROPERTIES
-    #            VS_DEBUGGER_ENVIRONMENT
-    #               "PATH=${Matlab_DLL_DIR};%PATH%\n${_proj_root_upper}=${${PROJECT_NAME}_ROOT}"
-    #    )
-    #endif()
+    if(WIN32 AND "${TEST_MEX_TEST}")
+        set_tests_properties("${_full_test_name}" PROPERTIES
+            ENVIRONMENT "PATH=${Matlab_DLL_DIR}"
+        )
+        # Set Visual Studio debugger environment variables
+        # Adding the Matlab DLL directory stops errors because of missing DLLs
+        # and adding ${PROJECT_NAME}_ROOT variable helps tests find data files.
+        string(TOUPPER "${PROJECT_NAME}_ROOT" _proj_root_upper)
+        set_target_properties("${TEST_NAME}"
+            PROPERTIES
+                VS_DEBUGGER_ENVIRONMENT
+                    "PATH=${Matlab_DLL_DIR};%PATH%\n${_proj_root_upper}=${${PROJECT_NAME}_ROOT}"
+        )
+    endif()
 
 endfunction()

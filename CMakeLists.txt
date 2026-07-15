@@ -24,6 +24,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add cmake directory to CMake's path
 list(APPEND CMAKE_MODULE_PATH "${MTEST_ROOT}/cmake"
      "${MTEST_ROOT}/cmake/external" "${MTEST_ROOT}/cmake/shared")
+include(PACE_FindMatlab)
 
 # This sets the destination for mex build artefacts (used in PACE_AddMex)
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -43,7 +44,7 @@ ENDIF()
 
 # Look for packages early so we can exit if they're not found
 find_package(OpenMP)
-include(PACE_FindMatlab)
+
 #
 message(" MATLAB CURRENT VERSION: ${MATLAB_CURRENT_VERSION}; Used Release: ${Matlab_RELEASE}")
 
