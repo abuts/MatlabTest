@@ -97,6 +97,12 @@ function(pace_add_cpp_unit_test)
                 VS_DEBUGGER_ENVIRONMENT
                     "PATH=${Matlab_DLL_DIR};%PATH%\n${_proj_root_upper}=${${PROJECT_NAME}_ROOT}"
         )
+    else()
+        MESSAGE("MATLAB LIBRARIES: ${Matlab_LIBRARIES}")
+        set_target_properties("${_full_test_name}"
+            PROPERTIES
+            BUILD_RPATH "${Matlab_LIBRARIES}"
+        )
     endif()
 
 endfunction()
