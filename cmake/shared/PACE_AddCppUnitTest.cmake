@@ -99,6 +99,7 @@ function(pace_add_cpp_unit_test)
         )
     else()
         MESSAGE("MATLAB LIBRARIES: ${Matlab_LIBRARIES}")
+        MESSAGE("FULL TEST NAME: ${_full_test_name}")        
         set_target_properties("${_full_test_name}"
             PROPERTIES
             BUILD_RPATH "${Matlab_LIBRARIES}"
