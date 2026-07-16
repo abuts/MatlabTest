@@ -62,14 +62,18 @@ function(pace_add_cpp_unit_test)
     # Create the test executable
     add_executable("${TEST_NAME}" "${TEST_SOURCES}")
     target_include_directories("${TEST_NAME}" PRIVATE "${CXX_SOURCE_DIR}")
-    target_link_libraries("${TEST_NAME}" gtest_main "${TEST_LIBRARIES}")
+    target_link_libraries("${TEST_NAME}" PRIVATE gtest_main "${TEST_LIBRARIES}")
     set_target_properties("${TEST_NAME}" PROPERTIES
-        FOLDER "Tests"
+        FOLDER "/home/rocky/m_cm_test/utility/Tests"
         RUNTIME_OUTPUT_DIRECTORY "${TESTS_BIN_DIR}"
     )
     # If MEX_TEST flag was passed to function, link to Matlab libraries
     if("${TEST_MEX_TEST}")
-        target_link_libraries("${TEST_NAME}" "${Matlab_LIBRARIES}")
+	target_link_libraries("${TEST_NAME}" PRIVATE
+		"${Matlab_LIBRARIES}"
+		)
+		#		"${Matlab_LIBRARIES};/opt/modules-common/software/MATLAB/R2024b/sys/os/glnxa64/libstdc++.so.6"
+		#	       )
         target_include_directories(
             "${TEST_NAME}" PRIVATE "${Matlab_INCLUDE_DIRS}")
     endif()
@@ -99,11 +103,15 @@ function(pace_add_cpp_unit_test)
         )
     else()
         MESSAGE("MATLAB LIBRARIES: ${Matlab_LIBRARIES}")
-        MESSAGE("FULL TEST NAME: ${_full_test_name}")        
-        set_target_properties("${_full_test_name}"
-            PROPERTIES
-            BUILD_RPATH "${Matlab_LIBRARIES}"
-        )
+        MESSAGE("TEST NAME: ${_full_test_name}")        
+	#target_link_options("${TEST_NAME}" PRIVATE -nostdlib++)
+	#target_link_libraries("${TEST_NAME}"  PRIVATE 
+	#	"/opt/modules-common/software/MATLAB/R2024b/sys/os/glnxa64/libstdc++.so.6"
+	#)
+	#set_target_properties("${TEST_NAME}"
+	#    PROPERTIES
+	#    BUILD_RPATH "/opt/modules-common/software/MATLAB/R2024b/sys/os/glnxa64/"
+	#)
     endif()
 
 endfunction()
