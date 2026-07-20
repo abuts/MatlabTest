@@ -69,10 +69,10 @@ function(pace_add_cpp_unit_test)
     )
     # If MEX_TEST flag was passed to function, link to Matlab libraries
     if("${TEST_MEX_TEST}")
-	    target_link_directories("${TEST_NAME}" PRIVATE
-		  "/home/rocky/bin/libstdcxx-10-for-matlab/lib64/"
-		  "/usr/lib64"
-	    )
+	    #target_link_directories("${TEST_NAME}" PRIVATE
+	    #		  "/home/rocky/bin/libstdcxx-10-for-matlab/lib64/"
+	    #		  "/usr/lib64"
+	    #	    )
 	    #target_link_libraries("${TEST_NAME}" PRIVATE
 	    #	   gtest_main	    
 	    #	   -Wl,--start-group
@@ -82,10 +82,13 @@ function(pace_add_cpp_unit_test)
 	    #	   -Wl,--end-group
 	    #)
 	    target_link_libraries("${TEST_NAME}" PRIVATE
- 		   gtest_main
-		   gtest
+	          -Wl,--start-group
+                   gtest_main
+		   gtest		     
 		   ${Matlab_LIBRARIES}
 		   ${TEST_LIBRARIES}
+		   stdc++
+		  -Wl,--end-group
 	     )
 	    #target_link_libraries("${TEST_NAME}" PRIVATE
 	    # 	"${Matlab_LIBRARIES};/opt/modules-common/software/MATLAB/R2024a/sys/os/glnxa64/libstdc++.so.6"
@@ -120,17 +123,17 @@ function(pace_add_cpp_unit_test)
     else()
         MESSAGE("MATLAB LIBRARIES: ${Matlab_LIBRARIES}")
         MESSAGE("TEST NAME: ${_full_test_name}")        
-	target_link_options("${TEST_NAME}" PRIVATE -nostdlib)
-        target_link_libraries("${TEST_NAME}"  PRIVATE 
-	   "/home/rocky/bin/libstdcxx-10-for-matlab/lib64/libstdc++.so"
-	   "/usr/lib64/libpthread.so"
-	   "/usr/lib64/libgcc_s.so.1"
-	   "/usr/lib64/libm.so.6"
-	   "/usr/lib64/libc.so.6"
-	)
+	#target_link_options("${TEST_NAME}" PRIVATE -nostdlib)
+	#target_link_libraries("${TEST_NAME}"  PRIVATE 
+	#   "/home/rocky/bin/libstdcxx-10-for-matlab/lib64/libstdc++.so"
+	#   "/usr/lib64/libpthread.so"
+	#   "/usr/lib64/libgcc_s.so.1"
+	#   "/usr/lib64/libm.so.6"
+	#   "/usr/lib64/libc.so.6"
+	#)
 	set_target_properties("${TEST_NAME}"
 	    PROPERTIES
-	    BUILD_RPATH "/home/rocky/bin/libstdcxx-10-for-matlab/lib64/"
+	    BUILD_RPATH "/home/rocky/gcc-10/lib64/"
 	)
     endif()
 
